@@ -9,6 +9,7 @@
 <script defer src="katex.min.js" integrity="sha384-PwRUT/YqbnEjkZO0zZxNqcxACrXe+j766U2amXcgMg5457rve2Y7I6ZJSm2A0mS4" crossorigin="anonymous"></script>
 <script defer src="contrib/auto-render.min.js" integrity="sha384-+VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4+/RRE05" crossorigin="anonymous"
     onload="renderMathInElement(document.body);"></script>
+<script defer src="marked.min.js"></script>
 
 <!-- 
 **** For MathJax *****
@@ -78,6 +79,11 @@ span.output {
             subjectBox.value = getParameterByNameOwDefault('subject')
             abstractBox.value = getParameterByNameOwDefault('abstract')
             remarksBox.value = getParameterByNameOwDefault('remarks')
+            marked.setOptions({
+            gfm: true,
+            breaks: true,
+            smartypants: true
+            });
             
             runTemplate()
             
@@ -94,7 +100,7 @@ span.output {
 	    function runTemplate(object) {
 	        title = titleBox.value
 	        speaker = speakerBox.value
-	        venue = venueBox.value  
+	        venue = "**Venue:** "+venueBox.value
 	        date = new Date(dateBox.value)
 	        datetime = date.toString() == "Invalid Date"? " " : date.toDateString() + ", " + timeBox.value
 	        subject = subjectBox.value
@@ -106,7 +112,7 @@ span.output {
 <p><b>Speaker:</b> ${speaker}</p>
 
 <p>
-<b>Venue:</b> <span class="output">${venue}</span>
+<span class="output">${marked.parse(venue)}</span>
 </p>
 
 <p>
@@ -121,7 +127,7 @@ span.output {
 <b>Abstract:</b> <span class="output">${abstr}</span>
 </p>
 
-<p><i><span class="output">${remarks}</span></i></p>`
+<span class="output">${marked.parse(remarks)}</span>`
 
         // From KaTeX documentation
 	        renderMathInElement(out, {
@@ -234,7 +240,7 @@ span.output {
 
 <div>
  <label for="remarks">Extra remarks</label>
- <textarea spellcheck="true" name="remarks" placeholder="">
+ <textarea spellcheck="true" name="remarks" placeholder="Markdown works">
 </textarea>
 </div>
 
